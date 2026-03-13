@@ -105,7 +105,7 @@ Example configuration:
 
 Clone the repository
 
-git clone https://github.com/RahulShukla387/MyProjectAdiYuvanBackend.git
+git clone https://github.com/RahulShukla387/helpOthersBackend
 
 
 Navigate to the project directory
