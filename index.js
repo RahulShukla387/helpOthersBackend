@@ -44,17 +44,28 @@ dbConnect();
  
 import { User } from "./models/User.js";
 import { Volunteer } from "./models/Volunteer.js";
-// const deleteModel = async()=> {
-//  console.log( "User deleted Successfully", await User.deleteMany({})  ) ;
-//  console.log( "Volunteer deleted Successfully", await Volunteer.deleteMany({})  ) ;
-// }
+const deleteModel = async()=> {
+ console.log( "User deleted Successfully", await User.deleteMany({})  ) ;
+ console.log( "Volunteer deleted Successfully", await Volunteer.deleteMany({})  ) ;
+}
  
- await User.findOneAndUpdate({email: "knowmetechnical@gmail.com"},
+ await User.findOneAndUpdate({email: {$in:["knowmetechnical@gmail.com" , "admin@gmail.com"]} },
    { $set:{role: "admin"}}
  )
-//  await User.findOneAndUpdate({email: "rs1256046@gmail.com"},
-//    { $set:{role: "volunteer"}}
-//  )
+ await User.findOneAndUpdate({email: {$in:["ssr128979@gmail.com" , "volunteer@gmail.com"]} },
+   { $set:{role: "volunteer"}}
+ )
+ await User.findOneAndUpdate({email: {$in:["rs1256046@gmail.com" , "user@gmail.com"]} },
+   { $set:{role: "user"}}
+ )
+
+ 
+//todo democredentials 
+
+// email => admin@gmail.com , volunteer@gmail.com , user@gmail.com , 
+//password => admin123 , volunteer123 , user123
+//username => admin , volunteer , user
+//verification code => 
 
 // deleteModel()
 // import ReportIssue from "./models/ReportIssue.js";

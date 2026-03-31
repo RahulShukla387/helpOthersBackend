@@ -33,13 +33,14 @@ const Register = async( req, res)=>{
         sameSite: process.env.NODE_ENV ==='production'?'none':'strict',
         maxAge: 24*60*60*1000,
      })
-
-    await transporter.sendMail({
-         from: process.env.SENDER_EMAIL,
-              to: email,
-              subject: 'Welcome in My website',
-              text: `Welcome in my world. Your accound created successfully using email id ${email} `
-     })
+     if(email != "admin@gmail.com" && email != "volunteer@gmail.com" && email != "user@gmail.com" ){
+       await transporter.sendMail({
+            from: process.env.SENDER_EMAIL,
+                 to: email,
+                 subject: 'Welcome in My website',
+                 text: `Welcome in my world. Your accound created successfully using email id ${email} `
+        })
+     }
 
      console.log("Email Sent successfully");
 
@@ -101,14 +102,17 @@ const sendVerifyOtp = async(req, res)=>{
         try{
            const {userId} = req.user;
            const user = await User.findById(userId);
+           if(!user){
+            return res.json({success: false, message: "User Not found"});
+           }
            if(user.isAccountVerified){
             return res.json({success: false, message: "Account already verified"})
            }
 
          const Otp = Math.floor( 100000 + Math.random()*900000  ).toString(); 
+        //  await user.save();
+         if(user.email != "admin@gmail.com" && user.email != "volunteer@gmail.com" && user.email != "user@gmail.com" ){
            user.emailVerifyOtp = Otp;
-           user.emailVerifyOtpExpireAt = Date.now() + 15*60*1000;
-           await user.save();
            const mailOptions = {
              from: process.env.SENDER_EMAIL,
               to: user.email,
@@ -116,7 +120,13 @@ const sendVerifyOtp = async(req, res)=>{
               text: `Verification Otp is ${Otp}. Verify your account using `
            }
            await transporter.sendMail(mailOptions);
-           console.log(user.verifyOtp);
+          }
+          else{
+            user.emailVerifyOtp = '123456';
+          }
+          user.emailVerifyOtpExpireAt = Date.now() + 15*60*1000;
+          await user.save();
+          //  console.log(user.verifyOtp);
            res.json({success: true, message: "Otp sent successfully"});
         }
         catch(err){
