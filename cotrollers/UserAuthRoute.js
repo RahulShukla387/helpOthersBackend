@@ -34,12 +34,17 @@ const Register = async( req, res)=>{
         maxAge: 24*60*60*1000,
      })
      if(email != "admin@gmail.com" && email != "volunteer@gmail.com" && email != "user@gmail.com" ){
+         try {
        await transporter.sendMail({
             from: process.env.SENDER_EMAIL,
                  to: email,
                  subject: 'Welcome in My website',
                  text: `Welcome in my world. Your accound created successfully using email id ${email} `
         })
+         }
+ catch(err){
+ console.log("Nodemailer email error ", err );
+ }
      }
 
      console.log("Email Sent successfully");
@@ -118,8 +123,15 @@ const sendVerifyOtp = async(req, res)=>{
               to: user.email,
               subject: 'Account Verification Otp',
               text: `Verification Otp is ${Otp}. Verify your account using `
-           }
+           }  
+           try{ 
            await transporter.sendMail(mailOptions);
+            
+            }
+          catch(err){
+           console.log("Nodemailer setup error ", err );
+            }
+
           }
           else{
             user.emailVerifyOtp = '123456';
@@ -182,7 +194,15 @@ const sendVerifyOtp = async(req, res)=>{
               subject: " Reset Password Otp",
               text: ` You reset password Otp is ${Otp}, Enter to reset password  `
            }
+              
+           try{
             await transporter.sendMail(mailOptions);
+              
+             }
+               catch(err){
+               console.log("Nodemailer setup error ", err );
+              }
+              
             user.forgetPasswordOtp = Otp;
             user.forgetPasswordOtpExpireAt = Date.now() + 15*60*1000;
             await user.save();
@@ -273,13 +293,19 @@ const sendVerifyOtp = async(req, res)=>{
          sameSite: (process.env.NODE_ENV === 'production')?'none': 'strict',
          maxAge: 24*60*60*1000,
        })
+          
 
+         try{
           await transporter.sendMail({
          from: process.env.SENDER_EMAIL,
               to: email,
               subject: 'Welcome in My website',
               text: `Welcome in my world. Your accound created successfully using email id ${email} `
      })
+      }
+ catch(err){
+ console.log("Nodemailer setup error ", err );
+ }
 
      console.log("Email Sent successfully");
 
