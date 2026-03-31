@@ -6,16 +6,31 @@ import cloudinary from "../config/Cloudinary.js";
 import { Upload } from "../models/Upload.js";
 import ReportIssue from "../models/ReportIssue.js";
 
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'C:/Users/ASUS/OneDrive/Desktop/css project/AdiYuvanBackend/routes/uploads');
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now();
+//     const ext = path.extname(file.originalname); // .jpg / .png / .jpeg
+//     cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+//   }
+// })
+  
+const uploadDir = path.join(process.cwd(), "uploads");
+
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'C:/Users/ASUS/OneDrive/Desktop/css project/AdiYuvanBackend/routes/uploads');
+  destination: async function (req, file, cb) {
+    await fs.ensureDir(uploadDir); 
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now();
-    const ext = path.extname(file.originalname); // .jpg / .png / .jpeg
+    const ext = path.extname(file.originalname);
     cb(null, file.fieldname + "-" + uniqueSuffix + ext);
   }
-})
+});
+
 export const upload = multer({ storage: storage })
   
 //todo Uploading the image on cloudinary for showAll 
