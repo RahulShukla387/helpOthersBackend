@@ -1,6 +1,7 @@
 import { User } from "../models/User.js";
 import { Volunteer } from "../models/Volunteer.js";
 import { transporter } from "../config/Nodemailer.js";
+import { sendEmail } from "../config/sendEmail.js";
 import dotenv from "dotenv";
 import ReportIssue from "../models/ReportIssue.js";
 dotenv.config();
@@ -71,12 +72,17 @@ const acceptVolunteer = async(req, res)=>{
 
        return res.json({success: false, message: `User not deleted ${err.message}`});
      }
-     await transporter.sendMail({
-             from: process.env.SENDER_EMAIL,
-              to: newUser.email,
-              subject: " You are now Volunteer ",
-              text: ` Congratulation You are now Promoted to Volunteer `
-     })
+    //  await transporter.sendMail({
+    //          from: process.env.SENDER_EMAIL,
+    //           to: newUser.email,
+    //           subject: " You are now Volunteer ",
+    //           text: ` Congratulation You are now Promoted to Volunteer `
+    //  })
+      await sendEmail(
+              newUser.email,
+              "You are now Volunteer",
+              ` Congratulation You are now Promoted to Volunteer`
+            );
      return res.json({success: true, message: " You had accepted Volunteer request " })
    }
   catch(err){
@@ -105,13 +111,18 @@ const rejectVolunteer = async(req, res)=>{
        return res.json({success: false, message: `User not deleted ${err.message}`});
      }
 
-       await transporter.sendMail({
-             from: process.env.SENDER_EMAIL,
-              to: newUser.email,
-              subject: " Rejected the request of Volunteer ",
-              text: ` Sorry your request got rejected try later  `
-     })
-     return res.json({success: true, message: " You had rejected the volunteer request " })
+    //    await transporter.sendMail({
+    //          from: process.env.SENDER_EMAIL,
+    //           to: newUser.email,
+    //           subject: " Rejected the request of Volunteer ",
+    //           text: ` Sorry your request got rejected try later  `
+    //  })
+    await sendEmail(
+              newUser.email,
+              "Rejected the request of volunteer",
+              `  Sorry your request got rejected try later`
+            );
+     return res.json({success: true, message: " You had rejected the volunteer request " });
    }
   catch(err){
     return res.json({ success: false, message: ` reject volunteer Err =>  ${err.message} `   });
