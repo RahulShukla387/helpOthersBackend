@@ -43,7 +43,7 @@ const Register = async (req, res) => {
         //            text: `Welcome in my world. Your accound created successfully using email id ${email} `
         //   })
 
-        sendEmail(
+        await sendEmail(
           email,
           "Welcome in My Website",
           `Welcome in my world. Your account created successfully using email id ${email}`
@@ -138,7 +138,7 @@ const sendVerifyOtp = async (req, res) => {
       //  }  
       try {
         //  await transporter.sendMail(mailOptions);
-        sendEmail(
+       await sendEmail(
           user.email,
           " Email Verification Otp",
           `Email Verification Otp is  ${Otp}`
@@ -220,7 +220,7 @@ const resetPasswordOtp = async (req, res) => {
 
     try {
       // await transporter.sendMail(mailOptions);
-      sendEmail(
+     await sendEmail(
         email,
         "Reset Password Otp",
         `Your reset password is  ${Otp}`
@@ -330,7 +330,7 @@ const googleLogin = async (req, res) => {
         //       subject: 'Welcome in My website',
         //       text: `Welcome in my world. Your account created successfully using email id ${email} `
         //  })
-        sendEmail(
+       await sendEmail(
           email,
           "Welcome in My website",
           ` Welcome in my world. Your account created successfully using email id  ${email}`

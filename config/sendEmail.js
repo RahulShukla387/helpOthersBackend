@@ -1,23 +1,63 @@
-import SibApiV3Sdk from "sib-api-v3-sdk";
+// import { Resend } from "resend";
 
-const client = SibApiV3Sdk.ApiClient.instance;
-const apiKey = client.authentications["api-key"];
+// const resend = new Resend(process.env.RESEND_API_KEY);
 
-apiKey.apiKey = process.env.BREVO_API_KEY;
+// export const sendEmail = async (to, subject, text) => {
+//   try {
+//     const data = await resend.emails.send({
+//       from: "onboarding@resend.dev",   
+//       to: [to],
+//       subject: subject,
+//       text: text,
+//     });
 
-const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+//     console.log("Email sent:", data);
+//   } catch (err) {
+//     console.error("Resend error:", err);
+//   }
+// };
+
+import { google } from "googleapis";
+
+const OAuth2 = google.auth.OAuth2;
+
+const oauth2Client = new OAuth2(
+  process.env.GMAIL_CLIENT_ID,
+  process.env.GMAIL_CLIENT_SECRET,
+  process.env.GMAIL_REDIRECT_URI
+);
+
+oauth2Client.setCredentials({
+  refresh_token: process.env.GMAIL_REFRESH_TOKEN,
+});
+
+const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
 export const sendEmail = async (to, subject, text) => {
   try {
-    const response = await emailApi.sendTransacEmail({
-      sender: { email: process.env.SENDER_EMAIL },
-      to: [{ email: to }],
-      subject,
-      textContent: text,
+    const message = [
+      `From: ${process.env.GMAIL_SENDER_EMAIL}`,
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      "",
+      text,
+    ].join("\n");
+
+    const encodedMessage = Buffer.from(message)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    const res = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw: encodedMessage,
+      },
     });
 
-    console.log("Email sent:", response.messageId);
+    console.log("Email sent:", res.data);
   } catch (err) {
-    console.error("Brevo error:", err.response?.body || err.message);
+    console.error("Gmail API Error:", err.message);
   }
 };
