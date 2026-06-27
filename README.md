@@ -4,13 +4,13 @@ This repository contains the backend API for the HelpOthers platform.
 
 The backend is built with **Node.js and Express** and provides authentication, donation handling, image management, and other services required by the frontend application.
 
-The API is deployed on **Railway** and connects to **MongoDB Atlas**.
+The API is deployed on **AWS C2** and connects to **MongoDB Atlas**.
 
 ---
 
 ## Live Backend API
 
-https://myprojectadiyuvanbackend-production.up.railway.app
+https://api.helpothers.space
 
 
 for demo purpose 
@@ -45,7 +45,10 @@ Integrations
 - Nodemailer (Email Service)
 
 Deployment
-- Railway
+- AWS C2
+- PM2
+- SSL CERTIFICATE
+- NGINX REVERSE PROXY
 
 ---
 
@@ -82,7 +85,7 @@ Deployment
 - Mongoose models for structured data handling
 
 ### Deployment
-- Backend deployed on Railway
+- Backend deployed on AWS C2
 - Environment variables for sensitive configuration
 
 ## Environment Variables
@@ -118,7 +121,7 @@ git clone https://github.com/RahulShukla387/helpOthersBackend
 
 Navigate to the project directory
 
-cd MyProjectAdiYuvanBackend
+cd helpOthersBackend
 
 
 Install dependencies
